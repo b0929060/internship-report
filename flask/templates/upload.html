@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>demo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bs-stepper@1.7.0/dist/css/bs-stepper.min.css">
+</head>
+<body>
+    <div class="container-fluid" style="padding: 0px;">
+        <nav class="navbar sticky-top navbar-expand-lg" style="background-color: #4563c6; ">
+          <a class="navbar-brand" style="margin: 0 0 0 20px; color: #000000;" href="https://www.mathison.com.tw/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-book-half"
+              viewBox="0 0 16 16">
+              <path
+                d="M8.5 2.687c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492V2.687zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783z" />
+            </svg>MATHISON</a>
+            <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarNav">
+              <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" href="/upload" style="color:#000000; font-size:15px;">上傳課程</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="/logout" style="color:#000000; font-size:15px;">登出</a>
+            </li>
+          </ul>
+            </div>
+        </nav>
+      </div>
+<!-- main -->
+<h3 class="text-center">
+    課程上傳
+  </h3>
+  <form class="container" method="POST" enctype="multipart/form-data" action="/upload/data" id="course_load">
+    <div class="bs-stepper">
+      <div class="bs-stepper-header" role="tablist">
+        <div class="step" data-target="#step1">
+          <button type="button" class="step-trigger" role="tab">
+            <span class="bs-stepper-circle">1</span>
+            <span class="bs-stepper-label">課程標題</span>
+          </button>
+        </div>
+        <div class="line"></div>
+        <div class="step" data-target="#step2">
+          <button type="button" class="step-trigger" role="tab">
+            <span class="bs-stepper-circle">2</span>
+            <span class="bs-stepper-label">預計單元</span>
+          </button>
+        </div>
+        <div class="line"></div>
+        <div class="step" data-target="#step3">
+          <button type="button" class="step-trigger" role="tab">
+            <span class="bs-stepper-circle">3</span>
+            <span class="bs-stepper-label">影片上傳</span>
+          </button>
+        </div>
+
+      </div>
+      <div class="bs-stepper-content">
+        <div id="step1" class="content" role="tabpanel">
+          <div class="form-group">
+            <label>
+              課程標題
+            </label>
+            <input class="form-control" name="course_name"/>
+          </div>
+          <div class="form-group">
+            <label>
+              課程封面
+            </label>
+          <div class="input-group">
+        <input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload" name="poster">
+        </div>
+          </div>
+          <div>
+            <button class="btn btn-primary" type="button" onclick="stepper.next()">下一步</button>
+          </div>
+        </div>
+        <div id="step2" class="content" role="tabpanel">
+            <div class="justify-content-md-end d-grid gap-2 d-md-flex mb-3">
+            <button class="btn btn-success" type="button">新增章節</button>
+          </div>
+          <div id="chap_main"></div>
+          <div>
+            <button class="btn btn-primary" type="button" onclick="stepper.previous()">上一步</button>
+            <button class="btn btn-primary" type="button" onclick="stepper.next()">下一步</button>
+          </div>
+        </div>
+        <div id="step3" class="content" role="tabpanel">
+          <div>
+            <button class="btn btn-primary" type="button" onclick="stepper.previous()">上一步</button>
+            <button class="btn btn-primary" type="button" onclick="simulateSubmit()">上傳課程</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <script src="https://cdn.jsdelivr.net/npm/bs-stepper@1.7.0/dist/js/bs-stepper.min.js"></script>
+  <script type="text/javascript">
+    var chapter_number=0;
+$(function(){
+    $('.btn-success').click(function(){
+        chapter_number=chapter_number+1;
+        $("<div/>",{
+          "id":"tab_"+chapter_number
+        }).appendTo('#chap_main')
+        $("<div/>",{
+            "class":"input-group mb-3",
+            "id":"chap_contain"+chapter_number
+        }).appendTo("#tab_"+chapter_number);
+        $("<span/>",{
+          "id":"章節"+chapter_number,
+          "class":"input-group-text",
+          "text":"章節"+chapter_number
+        }).appendTo("#chap_contain"+chapter_number);
+        $("<input/>",{
+            "class":"form-control",
+            "type":"text",
+            "id":"chapter_"+chapter_number,
+            "name":"chapter_"+chapter_number
+        }).appendTo("#chap_contain"+chapter_number);
+        $("<button/>",{
+            "id":"chap_btn_"+chapter_number,
+            "class":"btn btn-outline-success",
+            "type":"button",
+            "onclick":"addunits("+"chapter_"+chapter_number+"_unit_1.id"+","+"chap_btn_"+chapter_number+".id)",
+            "text":"新增單元"
+        }).appendTo("#chap_contain"+chapter_number);
+        $("<button/>",{
+            "id":"chap_del_btn_"+chapter_number,
+            "class":"btn btn-outline-danger",
+            "type":"button",
+            "onclick":"delchap("+"chap_del_btn_"+chapter_number+".id)",
+            "text":"刪除章節"
+        }).appendTo("#chap_contain"+chapter_number);
+        $("<div/>",{
+            "class":"input-group input-group-sm mb-3",
+            "id":"chap_"+chapter_number+"_unit_contain_1"
+        }).appendTo("#tab_"+chapter_number);
+        $("<span/>",{
+          "class":"input-group-text",
+          "text":"單元1"
+        }).appendTo("#chap_"+chapter_number+"_unit_contain_1");
+        $("<input/>",{
+            "class":"form-control",
+            "type":"text",
+            "id":"chapter_"+chapter_number+"_unit_1",
+            "name":"chapter_"+chapter_number+"_unit_1"
+        }).appendTo("#chap_"+chapter_number+"_unit_contain_1");
+        step2change()
+    })
+})
+    function addunits(chap_unit,btn_id){
+      var arr = chap_unit.split("_");
+      arr[3]=parseInt(arr[3])+1;
+      $("<div/>",{
+            "class":"input-group input-group-sm mb-3",
+            "id":"chap_"+arr[1]+"_unit_contain_"+arr[3]
+        }).appendTo("#tab_"+arr[1]);
+        $("<span/>",{
+          "class":"input-group-text",
+          "text":"單元"+arr[3]
+        }).appendTo("#chap_"+arr[1]+"_unit_contain_"+arr[3]);
+        $("<input/>",{
+            "class":"form-control",
+            "type":"text",
+            "id":"chapter_"+arr[1]+"_unit_"+arr[3],
+            "name":"chapter_"+arr[1]+"_unit_"+arr[3]
+        }).appendTo("#chap_"+arr[1]+"_unit_contain_"+arr[3]);
+      document.getElementById(btn_id).setAttribute('onclick',"addunits("+"chapter_"+arr[1]+"_unit_"+arr[3]+".id"+","+"chap_btn_"+arr[1]+".id)")
+      step2change()
+    }
+    function delchap(del_btn_id){
+      var del_arr = del_btn_id.split("_");
+      del_chap="#tab_"+del_arr[3];
+      $(del_chap).remove();
+      var fixed_chap;
+      var k;
+      for(var i=parseInt(del_arr[3])+1;i<=chapter_number;i++){
+        fix_chap="#tab_"+i;
+        k=i-1;
+        fixed_chap="#tab_"+k;
+        $(fix_chap).attr('id',fixed_chap)
+
+      }
+    }
+    function step2change(){
+      $("#step3").empty()
+      var final=$("#chap_main input").last().attr("id");
+      var array=final.split("_");
+      for(var i=1;i<=array[1];i++){
+        var tab="#tab_"+i+" div";
+        var last_unit=$(tab).last().attr("id");
+        var unit_num=last_unit.split("_")
+        for(var j=1;j<=unit_num[4];j++){
+        $("<div/>",{
+            "class":"input-group input-group-sm mb-3",
+            "id":"chap_"+i+"_unit_"+j+"_video_container"
+        }).appendTo("#step3")
+        $("<span/>",{
+          "class":"input-group-text",
+          "text":"章節"+i,
+        }).appendTo("#chap_"+i+"_unit_"+j+"_video_container")
+        $("<span/>",{
+          "class":"input-group-text",
+          "text":"單元"+j,
+        }).appendTo("#chap_"+i+"_unit_"+j+"_video_container")
+        $("<input/>",{
+          "type":"file",
+          "class":"form-control",
+          "id":"chap_"+i+"_unit_"+j+"_video",
+          "name":"chap_"+i+"_unit_"+j+"_video"
+        }).appendTo("#chap_"+i+"_unit_"+j+"_video_container")
+        }
+
+      }
+      $("<div/>",{
+            "id":"upload_btn"
+        }).appendTo("#step3");
+      $("<button/>",{
+        "class":"btn btn-primary me-3",
+        "type":"button",
+        "onclick":"stepper.previous()",
+        "text":"上一步"
+      }).appendTo('#upload_btn');
+      $("<button/>",{
+        "class":"btn btn-primary",
+        "type":"button",
+        "onclick":"simulateSubmit()",
+        "text":"上傳課程"
+      }).appendTo('#upload_btn');
+    }
+  </script>
+  <script>
+    var stepperElem = document.querySelector('.bs-stepper');
+    var stepper = new Stepper(stepperElem);
+    var done = false;
+    var currStep = 1;
+    history.pushState(currStep, '');
+    //切換到步驟前觸發，呼叫e.preventDefault()可阻止切換
+    stepperElem.addEventListener("show.bs-stepper", function (e) {
+      if (done) { //若程序完成，不再切換
+        e.preventDefault();
+        return;
+      }
+    });
+    //切換到步驟後觸發，e.detail.indexStep為目前步驟序號(從0開始)
+    stepperElem.addEventListener("shown.bs-stepper", function (e) {
+      var idx = e.detail.indexStep + 1;
+      currStep = idx;
+      //pushState()記下歷程以支援瀏覽器回上頁功能
+      history.pushState(idx, '');
+    })
+    //瀏覽器上一頁下一頁觸發
+    window.onpopstate = function (e) {
+      if (e.state && e.state != currStep)
+        stepper.to(e.state);
+    };
+    //模擬送出表單，註記已完成，不再允許切換步驟
+    function simulateSubmit() {
+      done = true;
+      document.getElementById("course_load").submit();
+    }
+  </script>
+<!-- main -->
+    </body>

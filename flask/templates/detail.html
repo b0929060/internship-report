@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>demo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+</head>
+
+<body>
+    <script src="{{url_for('static', filename='jquery-3.7.0.min.js')}}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.bundle.min.js') }}"></script>
+    <div class="container-fluid" style="padding: 0px;">
+        <nav class="navbar sticky-top navbar-expand-lg" style="background-color: #4563c6; ">
+          <a class="navbar-brand" style="margin: 0 0 0 20px; color: #000000;" href="https://www.mathison.com.tw/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-book-half"
+              viewBox="0 0 16 16">
+              <path
+                d="M8.5 2.687c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492V2.687zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783z" />
+            </svg>MATHISON</a>
+          <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" href="/online_course" style="color:#000000; font-size:15px;">課程</a>
+            </li>
+            <!-- <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" href="#"
+                style="color:rgb(0, 0, 0); font-size:15px;">預設</a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">1</a></li>
+                <li><a class="dropdown-item" href="#">2</a></li>
+              </ul>
+            </li> -->
+            <!-- <li class="nav-item">
+              <a class="nav-link" href="#" style="color:#000000; font-size:15px;">文章</a>
+            </li> -->
+            {% if session.username %}
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="/logout" style="color:#000000; font-size:15px;">登出</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="/login" style="color:#000000; font-size:15px;">登入/註冊</a>
+            </li>
+            {%endif%}
+          </ul>
+    </div>
+        </nav>
+      </div>
+    <div id="tab_1" class="container-fluid" style="background-color: black; padding: 10px 0 0 0;height: 420px;">
+        <div class="row" style="width: 100%;">
+            <div class="col-8" style="padding: 0 0px 0 10px; height:400px;">
+                <video id="videos" height="100%s" src="../static/{{course_units[0][2]}}" controls></video>
+            </div>
+            <div class="col-4" style="padding: 0 0 0 0;">
+                <div class="container-fluid overflow-auto" style="height: 400px; padding:0;">
+                    <div class="accordion " id="accordionExample">
+                        {%for i in range(1,chap_length+1,1)%}
+                        {% if i == 1:%}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapse{{i}}" aria-expanded="true" aria-controls="collapse{{i}}">
+                                    {{course_chap[i-1][0]}}
+                                </button>
+                            </h2>
+                            <div id="collapse{{i}}" class="accordion-collapse collapse show">
+                                <div class="accordion-body">
+                                    {%for course_unit in course_units%}
+                                    {% if course_unit[0]==course_chap[i-1][0]:%}
+                                    <div class="row">
+                                        <button id="../static/{{course_unit[2]}}" class="btn btn-ls col text-start border-bottom">
+                                            {{course_unit[1]}}
+                                        </button>
+                                    </div>
+                                    {%endif%}
+                                    {% endfor%}
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapse{{i}}" aria-expanded="false" aria-controls="collapse{{i}}">
+                                    {{course_chap[i-1][0]}}
+                                </button>
+                            </h2>
+                            <div id="collapse{{i}}" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    {%for course_unit in course_units%}
+                                    {% if course_unit[0]==course_chap[i-1][0]:%}
+                                    <div class="row">
+                                        <button id="../static/{{course_unit[2]}}" class="btn btn-ls col text-start border-bottom">
+                                            {{course_unit[1]}}
+                                        </button>
+                                    </div>
+                                    {%endif%}
+                                    {% endfor%}
+                                </div>
+                            </div>
+                        </div>
+                        {%endif%}
+                        {% endfor%}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body> 
+<script type="text/javascript">
+    $(function () {
+        $('.btn-ls').click(function () {
+            var video = $(this).attr('id');
+            $("#videos").attr('src', video);
+        })
+    })
+</script>
+
+</html>
